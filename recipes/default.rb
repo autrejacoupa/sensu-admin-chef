@@ -110,10 +110,17 @@ end
 
 link "/etc/nginx/sites-available/sensu-admin.conf" do
   to "#{node.sensu.admin.base_path}/sensu-admin-nginx.conf"
+  only_if "test -d /etc/nginx/sites-available"
 end
 
 link "/etc/nginx/sites-enabled/sensu-admin.conf" do
   to "/etc/nginx/sites-available/sensu-admin.conf"
+   only_if "test -d /etc/nginx/sites-available"
+end
+
+link "/etc/nginx/conf.d/sensu-admin.conf" do
+  to "#{node.sensu.admin.base_path}/sensu-admin-nginx.conf"
+  not_if "test -d /etc/nginx/sites-available"
 end
 
 ssl = data_bag_item("sensu", "ssl")
